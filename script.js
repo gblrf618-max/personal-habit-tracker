@@ -7,11 +7,13 @@ const days = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 const todayIndex = (new Date().getDay() + 6) % 7;
 const today = days[todayIndex]; // например, "Пн"
 // Красивая дата: "Понедельник, 15 сентября"
-const todayText = new Date().toLocaleDateString("ru-RU", {
+// Красивая дата: "Понедельник, 15 сентября"
+const rawDate = new Date().toLocaleDateString("ru-RU", {
   weekday: "long",
   day: "numeric",
   month: "long"
 });
+const todayText = rawDate.charAt(0).toUpperCase() + rawDate.slice(1);
 // === ЗАГРУЖАЕМ СОХРАНЁННОЕ ИЗ ПАМЯТИ БРАУЗЕРА ===
 // Пытаемся прочитать то, что сохраняли раньше.
 // Если ничего нет — берём пустой объект {}.
@@ -20,7 +22,9 @@ const progress = saved ? JSON.parse(saved) : {};
 
 // === НАХОДИМ МЕСТО ===
 const tracker = document.getElementById("tracker");
-
+// Находим элемент с датой и вставляем красивую дату
+const dateElement = document.getElementById("date");
+dateElement.textContent = todayText;
 // === ФУНКЦИЯ СОХРАНЕНИЯ ===
 // Превращает объект progress в строку и кладёт в localStorage.
 function saveProgress() {

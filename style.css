@@ -50,6 +50,13 @@ body {
   margin-bottom: 24px;
   color: var(--text);
 }
+/* === ДАТА ПОД ЗАГОЛОВКОМ === */
+.app__date {
+  font-size: 14px;
+  color: var(--text-soft);
+  margin-top: -16px;
+  margin-bottom: 24px;
+}
 /* === ТРЕКЕР (контейнер для всех строк) === */
 .tracker {
   display: flex;

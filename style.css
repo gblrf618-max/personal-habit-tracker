@@ -66,6 +66,14 @@ body {
   color: var(--text-soft);
 }
 
+/* === СЧЁТЧИК ПРОГРЕССА === */
+.app__progress {
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 500;
+  margin-top: 4px;
+}
+
 /* === КНОПКА СБРОСА === */
 .app__reset {
   font-family: inherit;

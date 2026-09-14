@@ -1,0 +1,130 @@
+/* === ПОДКЛЮЧАЕМ ШРИФТ MANROPE === */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+
+/* === ПЕРЕМЕННЫЕ (наша палитра) === */
+:root {
+  --bg:        #f4f6f4;  /* фон страницы — очень светлый серо-зелёный */
+  --surface:   #ffffff;  /* фон карточки — белый */
+  --text:      #2f3a33;  /* основной текст — тёмно-серо-зелёный */
+  --text-soft: #8a958d;  /* второстепенный текст — приглушённый */
+  --line:      #e3e8e4;  /* линии сетки — светлые */
+  --accent:    #7fb69a;  /* мягкий зелёный — для галочек и акцентов */
+  --accent-soft: #e6f1ea; /* очень светлый зелёный — для подсветки */
+  --radius:    14px;     /* скругление углов */
+}
+
+/* === СБРОС ОТСТУПОВ === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* === ОСНОВНОЙ СТИЛЬ СТРАНИЦЫ === */
+body {
+  font-family: 'Manrope', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 48px 20px;
+  -webkit-font-smoothing: antialiased;
+}
+/* === КАРТОЧКА ПРИЛОЖЕНИЯ === */
+.app {
+  width: 100%;
+  max-width: 640px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  box-shadow: 0 8px 30px rgba(47, 58, 51, 0.06);
+}
+
+/* === ЗАГОЛОВОК === */
+.app__title {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 24px;
+  color: var(--text);
+}
+/* === ТРЕКЕР (контейнер для всех строк) === */
+.tracker {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* === СТРОКА (одна привычка или шапка) === */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* === ОБЩИЙ СТИЛЬ КЛЕТКИ === */
+.cell {
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+/* === КЛЕТКА С НАЗВАНИЕМ ПРИВЫЧКИ === */
+.cell--label {
+  flex: 0 0 140px;
+  justify-content: flex-start;
+  padding-left: 4px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* === КЛЕТКА С ДНЁМ НЕДЕЛИ (в шапке) === */
+.cell--day {
+  flex: 1;
+  color: var(--text-soft);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+/* === ПУСТАЯ КЛЕТКА ДЛЯ ГАЛОЧКИ === */
+.cell--check {
+  flex: 1;
+  background: var(--bg);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.cell--check:hover {
+  background: var(--accent-soft);
+}
+/* === ЗАКРАШЕННАЯ (ОТМЕЧЕННАЯ) КЛЕТКА === */
+.cell--check.cell--done {
+  background: var(--accent);
+}
+
+.cell--check.cell--done:hover {
+  background: var(--accent);
+  opacity: 0.85;
+}
+/* === СЕГОДНЯШНИЙ ДЕНЬ === */
+
+/* В шапке — сегодняшний день ярче и зелёный */
+.cell--day.cell--today {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Пустая клетка сегодня — тонкая зелёная обводка */
+.cell--check.cell--today {
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+}
+
+/* Если сегодня И отмечено — обводка не нужна */
+.cell--check.cell--today.cell--done {
+  box-shadow: none;
+}

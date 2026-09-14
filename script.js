@@ -104,3 +104,24 @@ habits.forEach(function (habit) {
 
   tracker.appendChild(row);
 });
+// === КНОПКА СБРОСА ===
+const resetButton = document.getElementById("reset");
+
+resetButton.addEventListener("click", function () {
+  const confirmed = confirm("Точно сбросить все галочки?");
+  if (!confirmed) return;  // если отменила — выходим
+
+  // Очищаем объект progress
+  for (const key in progress) {
+    delete progress[key];
+  }
+
+  // Сохраняем пустое состояние
+  saveProgress();
+
+  // Снимаем все галочки с клеток на странице
+  const doneCells = document.querySelectorAll(".cell--done");
+  doneCells.forEach(function (cell) {
+    cell.classList.remove("cell--done");
+  });
+});

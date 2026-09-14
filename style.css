@@ -43,20 +43,49 @@ body {
 }
 
 /* === ЗАГОЛОВОК === */
+/* === ШАПКА ПРИЛОЖЕНИЯ === */
+.app__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+/* === ЗАГОЛОВОК === */
 .app__title {
   font-size: 22px;
   font-weight: 600;
   letter-spacing: -0.01em;
-  margin-bottom: 24px;
   color: var(--text);
+  margin-bottom: 2px;
 }
+
 /* === ДАТА ПОД ЗАГОЛОВКОМ === */
 .app__date {
   font-size: 14px;
   color: var(--text-soft);
-  margin-top: -16px;
-  margin-bottom: 24px;
 }
+
+/* === КНОПКА СБРОСА === */
+.app__reset {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-soft);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.app__reset:hover {
+  color: #c97a6d;
+  border-color: #e8d0c8;
+  background: #fdf5f2;
+}
+
 /* === ТРЕКЕР (контейнер для всех строк) === */
 .tracker {
   display: flex;

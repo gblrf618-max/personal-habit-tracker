@@ -25,6 +25,40 @@ const tracker = document.getElementById("tracker");
 // Находим элемент с датой и вставляем красивую дату
 const dateElement = document.getElementById("date");
 dateElement.textContent = todayText;
+// === ЗВУК ===
+// AudioContext — «звуковой движок» браузера.Создаём один раз и переиспользуем.
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+// Универсальная функция: играет короткий «щелчок» заданной частоты
+function playTone(frequency, duration) {
+  const osc = audioCtx.createOscillator();   // генератор волны
+  const gain = audioCtx.createGain();         // регулятор громкости
+
+  osc.frequency.value = frequency;            // частота звука (Гц)
+  osc.type = "sine";                          // тип волны: синус — мягкий
+
+  gain.gain.value = 0.08;                     // громкость: 0.08 — очень тихо
+
+  osc.connect(gain);                          // осциллятор → громкость
+  gain.connect(audioCtx.destination);         // громкость → динамики
+
+  osc.start();                                // запустить звук
+
+  // Плавно убираем громкость до 0 за время duration
+  gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+
+  osc.stop(audioCtx.currentTime + duration);  // остановить через duration
+}
+
+// «Тик» для клика по клетке: высокий, короткий
+function playTick() {
+  playTone(880, 0.06);   // 880 Гц, 60 мс
+}
+
+// «Ток» для кнопки сброса: ниже, чуть длиннее
+function playThock() {
+  playTone(440, 0.12);   // 440 Гц, 120 мс
+}
 // === ФУНКЦИЯ СОХРАНЕНИЯ ===
 // Превращает объект progress в строку и кладёт в localStorage.
 function saveProgress() {
@@ -85,6 +119,13 @@ habits.forEach(function (habit) {
  }                                       // ← новая
     // === ГЛАВНОЕ: ОБРАБОТКА КЛИКА ===
     cell.addEventListener("click", function () {
+      cell.addEventListener("click", function () {
+  playTick();   // ← НОВАЯ СТРОЧКА (звук «тик»)
+
+  // toggle — переключатель: был класс — убрать, не было — добавить
+  cell.classList.toggle("cell--done");
+  // ... остальной код
+});
       // toggle — переключатель: был класс — убрать, не было — добавить
       cell.classList.toggle("cell--done");
 
@@ -110,7 +151,17 @@ const resetButton = document.getElementById("reset");
 resetButton.addEventListener("click", function () {
   const confirmed = confirm("Точно сбросить все галочки?");
   if (!confirmed) return;  // если отменила — выходим
+resetButton.addEventListener("click", function () {
+  const confirmed = confirm("Точно сбросить все галочки?");
+  if (!confirmed) return;
 
+  playThock();   // ← НОВАЯ СТРОЧКА (звук «ток»)
+
+  // Очищаем объект progress
+  for (const key in progress) {
+    // ... остальной код
+  }
+});
   // Очищаем объект progress
   for (const key in progress) {
     delete progress[key];

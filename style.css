@@ -172,3 +172,22 @@ body {
 .cell--check.cell--today.cell--done {
   box-shadow: none;
 }
+/* === АНИМАЦИЯ КЛИКА: ПУЛЬСАЦИЯ === */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  40% {
+    transform: scale(1.08);
+    filter: brightness(1.4);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+.cell--pulse {
+  animation: pulse 0.3s ease;
+}

@@ -128,32 +128,35 @@ habits.forEach(function (habit) {
  }                                       // ← новая
     // === ГЛАВНОЕ: ОБРАБОТКА КЛИКА ===
     cell.addEventListener("click", function () {
-      cell.addEventListener("click", function () {
-  playTick();   // ← НОВАЯ СТРОЧКА (звук «тик»)
+  playTick();
 
-  // toggle — переключатель: был класс — убрать, не было — добавить
+  // Анимация пульсации
+  cell.classList.add("cell--pulse");
+  setTimeout(function () {
+    cell.classList.remove("cell--pulse");
+  }, 300);
+
+  // toggle — переключатель
   cell.classList.toggle("cell--done");
-  // ... остальной код
+
+  // Обновляем данные в объекте progress
+  if (cell.classList.contains("cell--done")) {
+    progress[key] = true;
+  } else {
+    delete progress[key];
+  }
+
+  // Сохраняем в память браузера
+  saveProgress();
+  updateProgress();
 });
-      // toggle — переключатель: был класс — убрать, не было — добавить
-      cell.classList.toggle("cell--done");
 
-      // Обновляем данные в объекте progress
-      if (cell.classList.contains("cell--done")) {
-        progress[key] = true;
-      } else {
-        delete progress[key];
-      }
-
-      // Сохраняем в память браузера
-      saveProgress();
-    });
 
     row.appendChild(cell);
   });
 
   tracker.appendChild(row);
-});
+});                          // ← закрывашка habits.forEach
 // === КНОПКА СБРОСА ===
 const resetButton = document.getElementById("reset");
 
@@ -180,6 +183,5 @@ resetButton.addEventListener("click", function () {
   });
 });
 
-
 // Обновляем счётчик при загрузке страницы
-updateProgress();
+updateProgress()

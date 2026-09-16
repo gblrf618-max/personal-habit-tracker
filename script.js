@@ -66,6 +66,10 @@ function updateProgress() {
   const done = Object.keys(progress).length;
   const total = habits.length * days.length;
   progressElement.textContent = "Выполнено: " + done + " из " + total;
+  
+  // Прогресс-бар: считаем процент
+  const percent = total === 0 ? 0 : (done / total) * 100;
+  document.getElementById("progressFill").style.width = percent + "%";
 }
 
 // === ФУНКЦИЯ СОХРАНЕНИЯ ===

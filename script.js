@@ -102,7 +102,7 @@ days.forEach(function (day) {
 tracker.appendChild(headerRow);
 
 // Строки с привычками
-habits.forEach(function (habit, rowindex) {
+habits.forEach(function (habit, rowIndex) {
   const row = document.createElement("div");
   row.classList.add("row");
 
@@ -111,11 +111,11 @@ habits.forEach(function (habit, rowindex) {
   labelCell.textContent = habit;
   row.appendChild(labelCell);
 
-  days.forEach(function (day, dayindex) {
+  days.forEach(function (day, dayIndex) {
     const cell = document.createElement("div");
     cell.classList.add("cell", "cell--check");
 
-//cell.style.animationDelay = (rowIndex * 7 + dayIndex) * 0.03 + "s";
+cell.style.animationDelay = (rowIndex * 7 + dayIndex) * 0.03 + "s";
 
     // Уникальный ключ для этой клетки: "Зарядка-Пн"
     const key = habit + "-" + day;

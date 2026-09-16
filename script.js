@@ -1,12 +1,44 @@
 // === ДАННЫЕ ===
-const habits = ["Зарядка", "Вода 1.5л", "Экран < 2ч"];
+// Привычки по умолчанию — используются только при первой загрузке.
+const DEFAULT_HABITS = ["Зарядка", "Вода 1.5л", "Экран < 2ч"];
 const days = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+
+// === ЗАГРУЖАЕМ СОХРАНЁННОЕ (с миграцией) ===
+function loadData() {
+  // 1. Пробуем прочитать НОВЫЙ формат
+  const raw = localStorage.getItem("habits-tracker");
+  if (raw) {
+    return JSON.parse(raw);
+  }
+
+  // 2. Нет нового — пробуем СТАРЫЙ
+  const oldRaw = localStorage.getItem("habits-progress");
+  const oldProgress = oldRaw ? JSON.parse(oldRaw) : {};
+
+  // 3. Собираем новый объект: привычки по умолчанию + старые галочки
+  const migrated = {
+    habits: DEFAULT_HABITS,
+    progress: oldProgress
+  };
+
+  // 4. Сохраняем под новым ключом, убираем старый
+  localStorage.setItem("habits-tracker", JSON.stringify(migrated));
+  localStorage.removeItem("habits-progress");
+
+  return migrated;
+}
+
+// Загружаем данные
+const data = loadData();
+
+// Теперь `habits` и `progress` — это ссылки на поля объекта `data`.
+const habits = data.habits;
+const progress = data.progress;
 // === ОПРЕДЕЛЯЕМ СЕГОДНЯШНИЙ ДЕНЬ ===
 // new Date() — текущая дата. getDay() возвращает 0=Вс, 1=Пн, ..., 6=Сб.
 // Нам надо перевести в наш формат: 0=Пн, 1=Вт, ..., 6=Вс.
 const todayIndex = (new Date().getDay() + 6) % 7;
 const today = days[todayIndex]; // например, "Пн"
-// Красивая дата: "Понедельник, 15 сентября"
 // Красивая дата: "Понедельник, 15 сентября"
 const rawDate = new Date().toLocaleDateString("ru-RU", {
   weekday: "long",
@@ -14,11 +46,7 @@ const rawDate = new Date().toLocaleDateString("ru-RU", {
   month: "long"
 });
 const todayText = rawDate.charAt(0).toUpperCase() + rawDate.slice(1);
-// === ЗАГРУЖАЕМ СОХРАНЁННОЕ ИЗ ПАМЯТИ БРАУЗЕРА ===
-// Пытаемся прочитать то, что сохраняли раньше.
-// Если ничего нет — берём пустой объект {}.
-const saved = localStorage.getItem("habits-progress");
-const progress = saved ? JSON.parse(saved) : {};
+
 
 // === НАХОДИМ МЕСТО ===
 const tracker = document.getElementById("tracker");
@@ -75,7 +103,7 @@ function updateProgress() {
 // === ФУНКЦИЯ СОХРАНЕНИЯ ===
 // Превращает объект progress в строку и кладёт в localStorage.
 function saveProgress() {
-  localStorage.setItem("habits-progress", JSON.stringify(progress));
+  localStorage.setItem("habits-tracker", JSON.stringify(data));
 }
 
 // === СТРОИМ ТАБЛИЦУ ===

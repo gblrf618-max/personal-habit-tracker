@@ -59,6 +59,15 @@ function playTick() {
 function playThock() {
   playTone(440, 0.12);   // 440 Гц, 120 мс
 }
+// === СЧЁТЧИК ПРОГРЕССА ===
+const progressElement = document.getElementById("progress");
+
+function updateProgress() {
+  const done = Object.keys(progress).length;
+  const total = habits.length * days.length;
+  progressElement.textContent = "Выполнено: " + done + " из " + total;
+}
+
 // === ФУНКЦИЯ СОХРАНЕНИЯ ===
 // Превращает объект progress в строку и кладёт в localStorage.
 function saveProgress() {
@@ -151,17 +160,10 @@ const resetButton = document.getElementById("reset");
 resetButton.addEventListener("click", function () {
   const confirmed = confirm("Точно сбросить все галочки?");
   if (!confirmed) return;  // если отменила — выходим
-resetButton.addEventListener("click", function () {
-  const confirmed = confirm("Точно сбросить все галочки?");
-  if (!confirmed) return;
+
 
   playThock();   // ← НОВАЯ СТРОЧКА (звук «ток»)
 
-  // Очищаем объект progress
-  for (const key in progress) {
-    // ... остальной код
-  }
-});
   // Очищаем объект progress
   for (const key in progress) {
     delete progress[key];
@@ -169,6 +171,7 @@ resetButton.addEventListener("click", function () {
 
   // Сохраняем пустое состояние
   saveProgress();
+  updateProgress();
 
   // Снимаем все галочки с клеток на странице
   const doneCells = document.querySelectorAll(".cell--done");
@@ -176,3 +179,7 @@ resetButton.addEventListener("click", function () {
     cell.classList.remove("cell--done");
   });
 });
+
+
+// Обновляем счётчик при загрузке страницы
+updateProgress();

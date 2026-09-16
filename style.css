@@ -222,3 +222,91 @@ body {
 .cell {
   animation: fadeIn 0.4s ease backwards;
 }
+/* === ДОБАВЛЕНИЕ ПРИВЫЧКИ === */
+.add-habit {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.add-habit__btn {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  background: transparent;
+  border: 1px dashed var(--accent);
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: 100%;
+}
+
+.add-habit__btn:hover {
+  background: var(--accent-soft);
+  border-style: solid;
+}
+
+/* Форма — скрыта по умолчанию */
+.add-habit__form {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Форма открыта — когда у .add-habit класс .open */
+.add-habit.open .add-habit__btn {
+  display: none;
+}
+
+.add-habit.open .add-habit__form {
+  display: flex;
+}
+
+.add-habit__input {
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 14px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.add-habit__input:focus {
+  border-color: var(--accent);
+}
+
+.add-habit__save {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  background: var(--accent);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.add-habit__save:hover {
+  opacity: 0.9;
+}
+
+.add-habit__cancel {
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text-soft);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.add-habit__cancel:hover {
+  color: var(--text);
+}

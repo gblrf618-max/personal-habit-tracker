@@ -105,6 +105,11 @@ function updateProgress() {
 function saveProgress() {
   localStorage.setItem("habits-tracker", JSON.stringify(data));
 }
+  function renderTracker() {
+  // Очищаем трекер перед перерисовкой
+  tracker.innerHTML = "";
+
+  // ... (дальше — весь код построения)
 
 // === СТРОИМ ТАБЛИЦУ ===
 
@@ -132,7 +137,6 @@ days.forEach(function (day) {
 
 
 tracker.appendChild(headerRow);
-
 // Строки с привычками
 habits.forEach(function (habit, rowIndex) {
   const row = document.createElement("div");
@@ -191,6 +195,7 @@ cell.style.animationDelay = (rowIndex * 7 + dayIndex) * 0.03 + "s";
 
   tracker.appendChild(row);
 });                          // ← закрывашка habits.forEach
+}
 // === КНОПКА СБРОСА ===
 const resetButton = document.getElementById("reset");
 
@@ -219,3 +224,62 @@ resetButton.addEventListener("click", function () {
 
 // Обновляем счётчик при загрузке страницы
 updateProgress()
+// === ДОБАВЛЕНИЕ ПРИВЫЧКИ: показать/скрыть форму ===
+const addHabitBlock = document.querySelector(".add-habit");
+const addHabitBtn = document.getElementById("addHabitBtn");
+const addHabitCancel = document.getElementById("addHabitCancel");
+
+addHabitBtn.addEventListener("click", function () {
+  addHabitBlock.classList.add("open");
+  document.getElementById("addHabitInput").focus();
+});
+
+addHabitCancel.addEventListener("click", function () {
+  addHabitBlock.classList.remove("open");
+});
+// Первая отрисовка
+renderTracker();
+// === ДОБАВЛЕНИЕ ПРИВЫЧКИ: логика ===
+const addHabitInput = document.getElementById("addHabitInput");
+const addHabitSave = document.getElementById("addHabitSave");
+
+function addHabit() {
+  const name = addHabitInput.value.trim();
+
+  // Проверка: пустое или слишком короткое?
+  if (name.length < 2) {
+    addHabitInput.focus();
+    return;
+  }
+
+  // Проверка: уже есть такая привычка?
+  if (habits.includes(name)) {
+    alert("Такая привычка уже есть");
+    addHabitInput.focus();
+    return;
+  }
+
+  // Добавляем в массив
+  habits.push(name);
+
+  // Сохраняем и перерисовываем
+  saveProgress();
+  renderTracker();
+  updateProgress();
+
+  // Закрываем форму и очищаем поле
+  addHabitBlock.classList.remove("open");
+  addHabitInput.value = "";
+}
+
+addHabitSave.addEventListener("click", addHabit);
+
+// Enter в поле — тоже добавление
+addHabitInput.addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    addHabit();
+  }
+});
+
+// Первая отрисовка таблицы
+renderTracker();

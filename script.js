@@ -178,6 +178,28 @@ const done = Object.keys(progress).filter(function (key) {
   document.getElementById("progressFill").style.width = percent + "%";
 }
 
+// Считает серию дней подряд для привычки
+function getStreak(habitName) {
+  let streak = 0;
+  const today = new Date();
+
+  // Идём назад по дням, максимум 365 дней
+  for (let i = 0; i < 365; i++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - i);
+
+    const key = habitName + "-" + formatDate(date);
+
+    if (progress[key]) {
+      streak++;
+    } else {
+      break;   // пропуск — серия прервана
+    }
+  }
+
+  return streak;
+}
+
 // === ФУНКЦИЯ СОХРАНЕНИЯ ===
 // Превращает объект progress в строку и кладёт в localStorage.
 function saveProgress() {

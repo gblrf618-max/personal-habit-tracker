@@ -3,13 +3,48 @@
 const DEFAULT_HABITS = ["Зарядка", "Вода 1.5л", "Экран < 2ч"];
 const days = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 
+// Превращает дату в строку "2026-09-17"
+function formatDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return year + "-" + month + "-" + day;
+}
+
+// Возвращает массив из 7 дат текущей недели (Пн–Вс)
+function getWeekDates() {
+  const today = new Date();
+
+  // Определяем понедельник этой недели
+  const dayOfWeek = today.getDay();                 // 0=Вс, 1=Пн, ..., 6=Сб
+  const mondayOffset = (dayOfWeek + 6) % 7;         // сколько дней от Пн до сегодня
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - mondayOffset);   // отматываем назад
+
+  // Собираем 7 дат от понедельника
+  const result = [];
+  for (let i = 0; i < 7; i++) {
+    const day = new Date(monday);
+    day.setDate(monday.getDate() + i);
+    result.push(formatDate(day));
+  }
+  return result;
+}
+
 // === ЗАГРУЖАЕМ СОХРАНЁННОЕ (с миграцией) ===
 function loadData() {
   // 1. Пробуем прочитать НОВЫЙ формат
   const raw = localStorage.getItem("habits-tracker");
   if (raw) {
-    return JSON.parse(raw);
-  }
+  const parsed = JSON.parse(raw);
+
+  localStorage.setItem("habits-tracker", JSON.stringify(parsed));
+
+  // Если есть старые ключи (с днями недели), мигрируем их на даты
+  parsed.progress = migrateProgressKeys(parsed.progress);
+
+  return parsed;
+}
 
   // 2. Нет нового — пробуем СТАРЫЙ
   const oldRaw = localStorage.getItem("habits-progress");
@@ -26,6 +61,41 @@ function loadData() {
   localStorage.removeItem("habits-progress");
 
   return migrated;
+}
+
+// Превращает ключи "Зарядка-Пн" в "Зарядка-2026-09-14"
+function migrateProgressKeys(progress) {
+  const weekDates = getWeekDates();
+  const newProgress = {};
+
+  for (const key in progress) {
+    // Ищем старый формат: "Привычка-ДеньНедели"
+    const parts = key.split("-");
+
+    // Если ключ уже в новом формате (с датой) — оставляем как есть
+    if (parts.length > 2) {
+      newProgress[key] = progress[key];
+      continue;
+    }
+
+    const habitName = parts[0];
+    const dayName = parts[1];
+
+    // Находим индекс дня в массиве days
+    const dayIdx = days.indexOf(dayName);
+
+    if (dayIdx === -1) {
+      // Не нашли день — оставляем ключ как есть (на всякий случай)
+      newProgress[key] = progress[key];
+      continue;
+    }
+
+    // Собираем новый ключ с датой
+    const newKey = habitName + "-" + weekDates[dayIdx];
+    newProgress[newKey] = progress[key];
+  }
+
+  return newProgress;
 }
 
 // Загружаем данные
@@ -108,6 +178,9 @@ function saveProgress() {
   function renderTracker() {
   // Очищаем трекер перед перерисовкой
   tracker.innerHTML = "";
+
+    // Массив дат текущей недели
+  const weekDates = getWeekDates();
 
   // ... (дальше — весь код построения)
 
@@ -195,7 +268,7 @@ row.appendChild(labelCell);
 cell.style.animationDelay = (rowIndex * 7 + dayIndex) * 0.03 + "s";
 
     // Уникальный ключ для этой клетки: "Зарядка-Пн"
-    const key = habit + "-" + day;
+    const key = habit + "-" + weekDates[dayIndex];
 
     // Если в сохранённых данных эта клетка = true — красим её сразу
     if (progress[key]) {

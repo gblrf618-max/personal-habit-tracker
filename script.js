@@ -161,7 +161,15 @@ function playThock() {
 const progressElement = document.getElementById("progress");
 
 function updateProgress() {
-  const done = Object.keys(progress).length;
+  // Считаем только ключи с датами текущей недели
+const weekDates = getWeekDates();
+const done = Object.keys(progress).filter(function (key) {
+  // Ключ формата "Зарядка-2026-09-14" — берём дату после последнего дефиса
+  const parts = key.split("-");
+  if (parts.length < 4) return false;      // старый формат — пропускаем
+  const date = parts.slice(1).join("-");   // "2026-09-14"
+  return weekDates.includes(date);
+}).length;
   const total = habits.length * days.length;
   progressElement.textContent = "Выполнено: " + done + " из " + total;
   

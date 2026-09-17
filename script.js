@@ -200,6 +200,58 @@ function getStreak(habitName) {
   return streak;
 }
 
+function createStreakElement(streak) {
+  const streakEl = document.createElement("span");
+  streakEl.classList.add("cell__streak");
+
+  streakEl.innerHTML = '<svg class="cell__flame" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C12 2 8 6 8 11C8 14 9 16 9 16C9 16 7 15 6 13C6 13 5 16 5 18C5 21 8 23 12 23C16 23 19 21 19 18C19 13 14 10 14 6C14 6 13 8 12 9C12 9 12 5 12 2Z" fill="currentColor"/></svg><span class="cell__streak-num">' + streak + '</span>';
+
+  let level = 1;
+  if (streak >= 14) level = 4;
+  else if (streak >= 7) level = 3;
+  else if (streak >= 3) level = 2;
+  streakEl.classList.add("cell__streak--level-" + level);
+
+  return streakEl;
+}
+
+// Обновляет огонёк у конкретной привычки
+function updateStreakFor(habitName) {
+  const labelCell = document.querySelector('[data-habit="' + habitName + '"]');
+  if (!labelCell) return;
+
+  const oldStreak = labelCell.querySelector(".cell__streak");
+  const streak = getStreak(habitName);
+
+  if (streak === 0) {
+    if (oldStreak) {
+      oldStreak.classList.add("cell__streak--fade-out");
+      setTimeout(function () {
+        oldStreak.remove();
+      }, 300);
+    }
+    return;
+  }
+
+  const newStreak = createStreakElement(streak);
+
+  if (oldStreak) {
+    oldStreak.classList.add("cell__streak--fade-out");
+    setTimeout(function () {
+      oldStreak.remove();
+      labelCell.insertBefore(newStreak, labelCell.firstChild);
+      // Форсируем reflow и запускаем анимацию
+      void newStreak.offsetWidth;
+      newStreak.classList.add("cell__streak--appear");
+    }, 200);
+  } else {
+    labelCell.insertBefore(newStreak, labelCell.firstChild);
+    // Форсируем reflow и запускаем анимацию
+    void newStreak.offsetWidth;
+    newStreak.classList.add("cell__streak--appear");
+  }
+}
+
 // === ФУНКЦИЯ СОХРАНЕНИЯ ===
 // Превращает объект progress в строку и кладёт в localStorage.
 function saveProgress() {
@@ -247,6 +299,14 @@ habits.forEach(function (habit, rowIndex) {
 
   const labelCell = document.createElement("div");
 labelCell.classList.add("cell", "cell--label");
+
+labelCell.setAttribute("data-habit", habit);
+
+    // Streak — огонёк + цифра
+  const streak = getStreak(habit);
+  if (streak > 0) {
+    labelCell.appendChild(createStreakElement(streak));
+  }
 
 // Текст привычки
 const habitText = document.createElement("span");
@@ -331,6 +391,7 @@ cell.style.animationDelay = (rowIndex * 7 + dayIndex) * 0.03 + "s";
   // Сохраняем в память браузера
   saveProgress();
   updateProgress();
+  updateStreakFor(habit);
 });
 
 
@@ -370,6 +431,11 @@ resetButton.addEventListener("click", function () {
   // Сохраняем пустое состояние
   saveProgress();
   updateProgress();
+    
+  // Обновляем огоньки у всех привычек (могли обнулиться)
+  habits.forEach(function (habit) {
+    updateStreakFor(habit);
+  });
 
   // Снимаем все галочки с клеток на странице
   const doneCells = document.querySelectorAll(".cell--done");

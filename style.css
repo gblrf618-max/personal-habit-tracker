@@ -345,3 +345,96 @@ body {
   color: #c97a6d;
   background: #fdf5f2;
 }
+/* === STREAK: ОГОНЁК + ЦИФРА === */
+.cell__streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-right: 6px;
+  flex-shrink: 0;
+  transition: color 0.3s ease;
+}
+
+/* Уровень 1: серия 1–2 дня — бледный */
+.cell__streak--level-1 {
+  color: #d4b5a0;
+}
+
+/* Уровень 2: серия 3–6 дней — тёплый оранжевый */
+.cell__streak--level-2 {
+  color: #e0895a;
+}
+
+/* Уровень 3: серия 7–13 дней — яркий оранжевый */
+.cell__streak--level-3 {
+  color: #e56a3a;
+}
+
+/* Уровень 4: серия 14+ дней — горячий красно-оранжевый */
+.cell__streak--level-4 {
+  color: #d94030;
+}
+
+.cell__flame {
+  width: 12px;
+  height: 12px;
+  transform-origin: bottom center;
+  animation: flicker 2.5s ease-in-out infinite;
+}
+
+.cell__streak-num {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+/* Лёгкое «дыхание» огонька */
+@keyframes flicker {
+  0%, 100% {
+    transform: scale(1) rotate(-1deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.08) rotate(1deg);
+    opacity: 0.9;
+  }
+}
+/* === АНИМАЦИИ STREAK === */
+
+/* Появление огонька */
+.cell__streak--appear {
+  animation: streakAppear 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes streakAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.15);
+    filter: brightness(1.6);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+/* Исчезновение огонька */
+.cell__streak--fade-out {
+  animation: streakFadeOut 0.25s ease-out forwards;
+}
+
+@keyframes streakFadeOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}

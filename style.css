@@ -310,3 +310,38 @@ body {
 .add-habit__cancel:hover {
   color: var(--text);
 }
+/* === УДАЛЕНИЕ ПРИВЫЧКИ === */
+.cell--label {
+  justify-content: space-between;
+  position: relative;
+}
+
+.cell__habit-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cell__delete {
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-soft);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0 6px;
+  opacity: 0;
+  transition: all 0.15s ease;
+  border-radius: 6px;
+}
+
+.cell--label:hover .cell__delete {
+  opacity: 1;
+}
+
+.cell__delete:hover {
+  color: #c97a6d;
+  background: #fdf5f2;
+}

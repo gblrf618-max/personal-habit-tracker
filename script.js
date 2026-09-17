@@ -143,9 +143,50 @@ habits.forEach(function (habit, rowIndex) {
   row.classList.add("row");
 
   const labelCell = document.createElement("div");
-  labelCell.classList.add("cell", "cell--label");
-  labelCell.textContent = habit;
-  row.appendChild(labelCell);
+labelCell.classList.add("cell", "cell--label");
+
+// Текст привычки
+const habitText = document.createElement("span");
+habitText.classList.add("cell__habit-text");
+habitText.textContent = habit;
+labelCell.appendChild(habitText);
+
+// Кнопка удаления
+const deleteBtn = document.createElement("button");
+deleteBtn.classList.add("cell__delete");
+deleteBtn.innerHTML = "×";
+deleteBtn.title = "Удалить привычку";
+
+deleteBtn.addEventListener("click", function (e) {
+  e.stopPropagation();  // чтобы клик не шёл дальше
+  const confirmed = confirm("Удалить привычку «" + habit + "»?");
+  if (!confirmed) return;
+
+  // Удаляем из массива habits
+  const index = habits.indexOf(habit);
+  if (index !== -1) {
+    habits.splice(index, 1);
+  }
+
+  // Удаляем связанные галочки из progress
+  const keysToDelete = [];
+  for (const key in progress) {
+    if (key.startsWith(habit + "-")) {
+      keysToDelete.push(key);
+    }
+  }
+  keysToDelete.forEach(function (key) {
+    delete progress[key];
+  });
+
+  // Сохраняем, перерисовываем
+  saveProgress();
+  renderTracker();
+  updateProgress();
+});
+
+labelCell.appendChild(deleteBtn);
+row.appendChild(labelCell);
 
   days.forEach(function (day, dayIndex) {
     const cell = document.createElement("div");
@@ -237,8 +278,7 @@ addHabitBtn.addEventListener("click", function () {
 addHabitCancel.addEventListener("click", function () {
   addHabitBlock.classList.remove("open");
 });
-// Первая отрисовка
-renderTracker();
+// Первая отрисовкаы
 // === ДОБАВЛЕНИЕ ПРИВЫЧКИ: логика ===
 const addHabitInput = document.getElementById("addHabitInput");
 const addHabitSave = document.getElementById("addHabitSave");

@@ -328,10 +328,22 @@ resetButton.addEventListener("click", function () {
 
   playThock();   // ← НОВАЯ СТРОЧКА (звук «ток»)
 
-  // Очищаем объект progress
+    // Очищаем ТОЛЬКО текущую неделю
+  const weekDates = getWeekDates();
+  const keysToDelete = [];
+
   for (const key in progress) {
-    delete progress[key];
+    const parts = key.split("-");
+    if (parts.length < 4) continue;             // старый формат — пропускаем
+    const date = parts.slice(1).join("-");       // "2026-09-14"
+    if (weekDates.includes(date)) {
+      keysToDelete.push(key);
+    }
   }
+
+  keysToDelete.forEach(function (key) {
+    delete progress[key];
+  });
 
   // Сохраняем пустое состояние
   saveProgress();

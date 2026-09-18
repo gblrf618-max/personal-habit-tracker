@@ -251,6 +251,61 @@ function updateStreakFor(habitName) {
     newStreak.classList.add("cell__streak--appear");
   }
 }
+{
+
+// Рисует мини-график за неделю
+function renderChart() {
+  const chart = document.getElementById("chart");
+  chart.innerHTML = "";
+
+  const weekDates = getWeekDates();
+  const total = habits.length;
+
+  weekDates.forEach(function (date, i) {
+    // Считаем сколько привычек выполнено в этот день
+    let done = 0;
+    habits.forEach(function (habit) {
+      const key = habit + "-" + date;
+      if (progress[key]) done++;
+    });
+
+    const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+
+    // Создаём столбик дня
+    const dayEl = document.createElement("div");
+    dayEl.classList.add("chart__day");
+
+    // Процент сверху (появляется при наведении)
+    const percentEl = document.createElement("span");
+    percentEl.classList.add("chart__percent");
+    percentEl.textContent = percent + "%";
+    dayEl.appendChild(percentEl);
+
+    // Обёртка для полосы
+    const barWrapper = document.createElement("div");
+    barWrapper.classList.add("chart__bar-wrapper");
+
+    // Полоса
+    const bar = document.createElement("div");
+    bar.classList.add("chart__bar");
+    bar.style.height = percent + "%";
+    barWrapper.appendChild(bar);
+
+    dayEl.appendChild(barWrapper);
+
+    // Подпись дня
+    const labelEl = document.createElement("span");
+    labelEl.classList.add("chart__label");
+    labelEl.textContent = days[i];
+    dayEl.appendChild(labelEl);
+
+    chart.appendChild(dayEl);
+  });
+}
+  
+}
+
+
 
 // === ФУНКЦИЯ СОХРАНЕНИЯ ===
 // Превращает объект progress в строку и кладёт в localStorage.
@@ -346,6 +401,7 @@ deleteBtn.addEventListener("click", function (e) {
   saveProgress();
   renderTracker();
   updateProgress();
+  renderChart();
 });
 
 labelCell.appendChild(deleteBtn);
@@ -392,6 +448,7 @@ cell.style.animationDelay = (rowIndex * 7 + dayIndex) * 0.03 + "s";
   saveProgress();
   updateProgress();
   updateStreakFor(habit);
+  renderChart();
 });
 
 
@@ -436,6 +493,7 @@ resetButton.addEventListener("click", function () {
   habits.forEach(function (habit) {
     updateStreakFor(habit);
   });
+  renderChart();
 
   // Снимаем все галочки с клеток на странице
   const doneCells = document.querySelectorAll(".cell--done");
@@ -487,6 +545,7 @@ function addHabit() {
   saveProgress();
   renderTracker();
   updateProgress();
+  renderChart();
 
   // Закрываем форму и очищаем поле
   addHabitBlock.classList.remove("open");
@@ -504,3 +563,4 @@ addHabitInput.addEventListener("keydown", function (event) {
 
 // Первая отрисовка таблицы
 renderTracker();
+renderChart();

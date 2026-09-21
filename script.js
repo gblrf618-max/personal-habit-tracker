@@ -287,9 +287,10 @@ function renderChart() {
 
     // Полоса
     const bar = document.createElement("div");
-    bar.classList.add("chart__bar");
-    bar.style.height = percent + "%";
-    barWrapper.appendChild(bar);
+  bar.classList.add("chart__bar", "chart__bar--appear");
+  bar.style.animationDelay = (i * 0.08) + "s";   // ← задержка по индексу
+  bar.style.height = percent + "%";
+  barWrapper.appendChild(bar);
 
     dayEl.appendChild(barWrapper);
 
@@ -449,6 +450,7 @@ cell.style.animationDelay = (rowIndex * 7 + dayIndex) * 0.03 + "s";
   updateProgress();
   updateStreakFor(habit);
   renderChart();
+    
 });
 
 

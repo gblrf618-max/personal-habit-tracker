@@ -457,6 +457,15 @@ body {
   justify-content: flex-end;
   height: 100%;
   gap: 6px;
+  transition: transform 0.2s ease;
+}
+
+.chart__day:hover {
+  transform: translateY(-2px);
+}
+
+.chart__day:hover .chart__bar {
+  filter: brightness(1.05);
 }
 
 .chart__bar-wrapper {
@@ -474,6 +483,22 @@ body {
   background: linear-gradient(180deg, #7fb69a 0%, #a5cbb6 100%);
   transition: height 0.4s ease;
   min-height: 2px;
+  transform-origin: bottom;
+}
+
+.chart__bar--appear {
+  animation: chartBarAppear 0.8s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+@keyframes chartBarAppear {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
 }
 
 .chart__label {
@@ -492,4 +517,14 @@ body {
 
 .chart__day:hover .chart__percent {
   opacity: 1;
+}
+
+.chart__bar--pulse {
+  animation: chartBarPulse 0.35s ease;
+}
+
+@keyframes chartBarPulse {
+  0% { filter: brightness(1); }
+  40% { filter: brightness(1.4); }
+  100% { filter: brightness(1); }
 }
